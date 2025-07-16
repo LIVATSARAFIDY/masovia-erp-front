@@ -44,7 +44,7 @@ const App: React.FC = () => {
               { user ? (
                   <button 
                     className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
-                    onClick={() => navigate('/invoice')}
+                    onClick={() => navigate('/dashboard')}
                   >
                     Tableau de bord
                   </button>
@@ -108,7 +108,7 @@ const App: React.FC = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button 
-                  onClick={() => navigate('/invoice')}
+                  onClick={() => navigate('/dasbhboard')}
                   className="bg-orange-500 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-orange-600 transition-colors !rounded-button whitespace-nowrap cursor-pointer"
                 >
                   { user ? "Commencer" : "Essayer gratuitement" }
