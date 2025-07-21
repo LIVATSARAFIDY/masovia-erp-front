@@ -3,7 +3,6 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { Outlet, useNavigate } from "react-router"
 import { ModeToggle } from "@/components/mode-toggle"
 import { ThemeProvider } from "@/components/theme-provider"
-import { Button } from "@/components/ui/button"
 import { useAuthStore } from "@/sotre/authStore"
 import { useEffect } from "react"
 
