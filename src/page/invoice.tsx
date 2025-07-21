@@ -115,12 +115,12 @@ const Invoice: FunctionComponent = () => {
           
           <div className='flex flex-col justify-center md:flex-row md:items-center gap-2.5' >
           {
-              exchangeRate.data?.map((cur:any , index:number) => (
-              <Button key={index} variant="default" >
-                <span className={`fi fi-${ cur.targetCurrency.code.slice(0,2).toLowerCase()  }`}></span>{ ' ' }
-                <span className='font-black' >{cur.targetCurrency.code} :</span> {(1/cur.rate).toFixed(3)+' MGA '} 
-              </Button>
-              )) 
+              // exchangeRate.data?.map((cur:any , index:number) => (
+              // <Button key={index} variant="default" >
+              //   <span className={`fi fi-${ cur.targetCurrency.code.slice(0,2).toLowerCase()  }`}></span>{ ' ' }
+              //   <span className='font-black' >{cur.targetCurrency.code} :</span> {(1/cur.rate).toFixed(3)+' MGA '} 
+              // </Button>
+              // )) 
           }
           
           </div>

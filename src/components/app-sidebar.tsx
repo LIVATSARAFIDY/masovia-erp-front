@@ -27,132 +27,143 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { useAuthStore } from "@/sotre/authStore"
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { firstname, lastname, email } = useAuthStore()
+  const data = {
+      user: {
+        name: "shadcn",
+        email: "m@example.com",
+        avatar: "/avatars/shadcn.jpg",
+      },
+      navMain: [
         {
-          title: "History",
+          title: "Playground",
           url: "#",
+          icon: SquareTerminal,
+          isActive: true,
+          items: [
+            {
+              title: "History",
+              url: "#",
+            },
+            {
+              title: "Starred",
+              url: "#",
+            },
+            {
+              title: "Settings",
+              url: "#",
+            },
+          ],
         },
         {
-          title: "Starred",
+          title: "Models",
           url: "#",
+          icon: Bot,
+          items: [
+            {
+              title: "Genesis",
+              url: "#",
+            },
+            {
+              title: "Explorer",
+              url: "#",
+            },
+            {
+              title: "Quantum",
+              url: "#",
+            },
+          ],
+        },
+        {
+          title: "Documentation",
+          url: "#",
+          icon: BookOpen,
+          items: [
+            {
+              title: "Introduction",
+              url: "#",
+            },
+            {
+              title: "Get Started",
+              url: "#",
+            },
+            {
+              title: "Tutorials",
+              url: "#",
+            },
+            {
+              title: "Changelog",
+              url: "#",
+            },
+          ],
         },
         {
           title: "Settings",
           url: "#",
+          icon: Settings2,
+          items: [
+            {
+              title: "General",
+              url: "#",
+            },
+            {
+              title: "Team",
+              url: "#",
+            },
+            {
+              title: "Billing",
+              url: "#",
+            },
+            {
+              title: "Limits",
+              url: "#",
+            },
+          ],
         },
       ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
+      navSecondary: [
         {
-          title: "Genesis",
+          title: "Support",
           url: "#",
+          icon: LifeBuoy,
         },
         {
-          title: "Explorer",
+          title: "Feedback",
           url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
+          icon: Send,
         },
       ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
+      projects: [
         {
-          title: "Introduction",
+          name: "Design Engineering",
           url: "#",
+          icon: Frame,
         },
         {
-          title: "Get Started",
+          name: "Sales & Marketing",
           url: "#",
+          icon: PieChart,
         },
         {
-          title: "Tutorials",
+          name: "Travel",
           url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
+          icon: Map,
         },
       ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-}
-
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  }
+  const dataUser = React.useRef({name: '',email: '',avatar: ""})
+  
+  React.useEffect(() => {
+    dataUser.current = {
+      name: firstname + " " + lastname,
+      email: email,
+      avatar: "https://github.com/shadcn.png",
+    }
+  },[firstname, lastname, email])
   return (
     <Sidebar variant="floating"  {...props}>
       <SidebarHeader>
@@ -178,7 +189,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={dataUser.current} />
       </SidebarFooter>
     </Sidebar>
   )

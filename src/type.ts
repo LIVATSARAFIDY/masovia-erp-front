@@ -31,23 +31,34 @@ export type FormErrors = {
 }
 
 export type Product = {
+  id:number;
   description: string;
   unitPrice: number;
   quantity: number;
   image?: string;
 }
 
-export type InvoiceMetaData = {
-  name?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-  type: 'sender' | 'receiver';
+export type ClientInvoice = {
+  name: string;
+  email: string;
+  address: string;
+  phone: string;
+  company: string;
 }
 
 export type InvoiceDocumentType = {
-  items :  Product[] , sender: InvoiceMetaData, receiver: InvoiceMetaData
+  notes: string,
+  totalHT: number,
+  currency: string,
+  invoiceNumber: string,
+  invoiceDate: string;
+  dueDate: string;
+  client: ClientInvoice;
+  tva: number;
+  discount: number;
+  products: Product[];
 }
+
 
 export type ExchangeRate = {
   currency: string;
