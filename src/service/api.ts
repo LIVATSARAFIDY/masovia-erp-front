@@ -1,5 +1,4 @@
 import ky from 'ky';
-const backendUrl = import.meta.env.VITE_SERVER_BASE_URL
 export const api = ky.create(
     {
         
