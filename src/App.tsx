@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import type { User } from './type';
-// import { ThemeProvider } from "@/components/theme-provider"
 
 const App: React.FC = () => {
   /**
@@ -24,7 +23,6 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    // <ThemeProvider>
       <div className="min-h-screen bg-white font-sans">
         {/* Header */}
         <header className="bg-white shadow-sm fixed w-full z-10">
@@ -261,7 +259,6 @@ const App: React.FC = () => {
           </div>
         </footer>
       </div>
-    // </ThemeProvider>
   );
 }
 

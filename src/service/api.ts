@@ -1,9 +1,9 @@
 import ky from 'ky';
+const backendUrl = import.meta.env.VITE_SERVER_BASE_URL
 export const api = ky.create(
     {
         
-        // prefixUrl: 'https://invoice-generator-server-kybx.onrender.com/api/',
-        prefixUrl: 'http://localhost:3001/api/',
+        prefixUrl: import.meta.env.DEV ? 'http://localhost:3001/api/' : import.meta.env.VITE_SERVER_BASE_URL,
         retry: {
             limit: 2,
             statusCodes: [408, 500, 502, 503, 504],
