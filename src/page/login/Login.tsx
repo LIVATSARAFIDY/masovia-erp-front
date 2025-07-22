@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "../../sotre/authStore.ts";
 import { Link, useNavigate  } from "react-router";
 import { FaEnvelope, FaLock, FaEyeSlash, FaEye, FaSpinner } from "react-icons/fa";
+import { useGoogleAuth } from "@/hooks/use-google-auth.ts";
 
 const Login = () => {
-    let navigate = useNavigate();
+    const navigate = useNavigate();
+    const { handleGoogleAuth } = useGoogleAuth(); 
     const {email, password, isLoading, errorHttp,isAuthenticated ,setEmail, setPassword, login } = useAuthStore();
 
     const [showPassword, setShowPassword] = useState (false);
@@ -135,6 +137,7 @@ const Login = () => {
                     <button
                     type="button"
                     className="!rounded-button whitespace-nowrap w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
+                    onClick={handleGoogleAuth}
                     >
                     <i className="fab fa-google mr-2"></i>
                     Google

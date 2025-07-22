@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router";
 import { FaUserCircle, FaEnvelope, FaLock, FaEyeSlash, FaEye, FaSpinner } from "react-icons/fa";
 import { useAuthStore } from "../../sotre/authStore.ts";
 import type { FormErrors } from "../../type";
+import { useGoogleAuth } from "@/hooks/use-google-auth.ts";
 
 
 const Register = () => {
     const navigate = useNavigate()
+    const { handleGoogleAuth } = useGoogleAuth();
 
     const { 
         firstname, lastname, email, password, errorHttp, isLoading,
@@ -37,26 +39,7 @@ const Register = () => {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     }
-    const handleGoogleLogin = () => {
-        window.open(
-            "http://localhost:3001/api/auth/google",
-            "_blank",
-            "width=500,height=600"
-         );
-
-        const messageListener = (event: MessageEvent) => {
-            console.log("event :", event);
-            console.log("typeof :", typeof event.data);
-            console.log("Message reçu de la popup :", event.data);
-            if (typeof event.data === "object") {
-                localStorage.setItem('userConnected', JSON.stringify(event.data))
-                navigate("/invoice");  
-            }
-            window.removeEventListener("message", messageListener);
-        };
-
-        window.addEventListener("message", messageListener);
-    }
+    
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if(validateForm()){
@@ -252,7 +235,7 @@ const Register = () => {
                         <button
                             type="button"
                             className="!rounded-button whitespace-nowrap w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
-                            onClick={handleGoogleLogin}
+                            onClick={handleGoogleAuth}
                         >
                             <i className="fab fa-google mr-2"></i>
                             Google

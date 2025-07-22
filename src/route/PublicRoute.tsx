@@ -4,7 +4,7 @@ import type { JSX } from "react";
 const PublicRoute = ({ children }: { children: JSX.Element }) => {
     
     const userConnected = localStorage.getItem('userConnected');
-    return userConnected ? <Navigate to="/invoice" replace /> :  children;
+    return userConnected ? <Navigate to="/dashboard" replace /> :  children;
 
 };
 
