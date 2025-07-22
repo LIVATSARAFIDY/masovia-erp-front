@@ -2,15 +2,15 @@
 
 import * as React from "react"
 import {
-  BookOpen,
+  // BookOpen,
   Bot,
   Command,
   Frame,
   LifeBuoy,
-  Map,
+  // Map,
   PieChart,
   Send,
-  Settings2,
+  // Settings2,
   SquareTerminal,
 } from "lucide-react"
 
