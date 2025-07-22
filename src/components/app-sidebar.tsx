@@ -40,90 +40,77 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       navMain: [
         {
-          title: "Playground",
+          title: "Facturation",
           url: "#",
           icon: SquareTerminal,
           isActive: true,
           items: [
             {
-              title: "History",
+              title: "Génére facture",
               url: "#",
             },
             {
-              title: "Starred",
+              title: "Facture enregistrer",
               url: "#",
             },
             {
-              title: "Settings",
+              title: "Template",
               url: "#",
             },
           ],
         },
         {
-          title: "Models",
+          title: "Clients",
           url: "#",
           icon: Bot,
-          items: [
-            {
-              title: "Genesis",
-              url: "#",
-            },
-            {
-              title: "Explorer",
-              url: "#",
-            },
-            {
-              title: "Quantum",
-              url: "#",
-            },
-          ],
+          
         },
-        {
-          title: "Documentation",
-          url: "#",
-          icon: BookOpen,
-          items: [
-            {
-              title: "Introduction",
-              url: "#",
-            },
-            {
-              title: "Get Started",
-              url: "#",
-            },
-            {
-              title: "Tutorials",
-              url: "#",
-            },
-            {
-              title: "Changelog",
-              url: "#",
-            },
-          ],
-        },
-        {
-          title: "Settings",
-          url: "#",
-          icon: Settings2,
-          items: [
-            {
-              title: "General",
-              url: "#",
-            },
-            {
-              title: "Team",
-              url: "#",
-            },
-            {
-              title: "Billing",
-              url: "#",
-            },
-            {
-              title: "Limits",
-              url: "#",
-            },
-          ],
-        },
+        // {
+        //   title: "Documentation",
+        //   url: "#",
+        //   icon: BookOpen,
+        //   items: [
+        //     {
+        //       title: "Introduction",
+        //       url: "#",
+        //     },
+        //     {
+        //       title: "Get Started",
+        //       url: "#",
+        //     },
+        //     {
+        //       title: "Tutorials",
+        //       url: "#",
+        //     },
+        //     {
+        //       title: "Changelog",
+        //       url: "#",
+        //     },
+        //   ],
+        // },
+        // {
+        //   title: "Settings",
+        //   url: "#",
+        //   icon: Settings2,
+        //   items: [
+        //     {
+        //       title: "General",
+        //       url: "#",
+        //     },
+        //     {
+        //       title: "Team",
+        //       url: "#",
+        //     },
+        //     {
+        //       title: "Billing",
+        //       url: "#",
+        //     },
+        //     {
+        //       title: "Limits",
+        //       url: "#",
+        //     },
+        //   ],
+        // },
       ],
       navSecondary: [
         {
@@ -139,31 +126,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       ],
       projects: [
         {
-          name: "Design Engineering",
+          name: "Profil",
           url: "#",
           icon: Frame,
         },
         {
-          name: "Sales & Marketing",
+          name: "utilisateurs",
           url: "#",
           icon: PieChart,
         },
-        {
-          name: "Travel",
-          url: "#",
-          icon: Map,
-        },
+        // {
+        //   name: "Travel",
+        //   url: "#",
+        //   icon: Map,
+        // },
       ],
   }
-  const dataUser = React.useRef({name: '',email: '',avatar: ""})
+  const dataUser = React.useRef({name: firstname+' '+lastname,email: email,avatar: "https://github.com/shadcn.png"})
   
-  React.useEffect(() => {
-    dataUser.current = {
-      name: firstname + " " + lastname,
-      email: email,
-      avatar: "https://github.com/shadcn.png",
-    }
-  },[firstname, lastname, email])
+  // React.useEffect(() => {
+  //   console.log('dans app-sider', firstname, lastname)
+  //   dataUser.current = {
+  //     name: firstname + " " + lastname,
+  //     email: email,
+  //     avatar: "https://github.com/shadcn.png",
+  //   }
+  // },[firstname, lastname, email])
   return (
     <Sidebar variant="floating"  {...props}>
       <SidebarHeader>

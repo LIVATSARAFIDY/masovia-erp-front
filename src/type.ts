@@ -44,6 +44,7 @@ export type ClientInvoice = {
   address: string;
   phone: string;
   company: string;
+  logo: string
 }
 
 export type InvoiceDocumentType = {

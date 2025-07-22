@@ -3,7 +3,7 @@ import { getDefaultCurrencies } from "@/service/invoieService"
 import { useQuery } from "@tanstack/react-query"
 import { InputWithLabel } from "@/components/input-with-label";
 import { Calendar29 } from "@/components/date-picker";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { formatAmountWithDecimal, formatDate } from "@/lib/utils";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -24,10 +24,12 @@ import { Separator } from "@/components/ui/separator";
 import { pdf } from "@react-pdf/renderer";
 import { saveAs  } from "file-saver"
 import InvoiceDocument from "./invoice-document";
+import { Label } from "@/components/ui/label";
 
 const Invoice = () => {
     const today = new Date();
     const nexMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+    
     const exchangeRate = useQuery({
         queryKey: ['exchangeRate'], 
         queryFn: async () => {
@@ -40,7 +42,8 @@ const Invoice = () => {
         email: '',
         address: '',
         phone: '',
-        company: ''
+        company: '',
+        logo:''
     });
     
     const [products, setProducts] = useState<Product[]>([]);
@@ -53,8 +56,14 @@ const Invoice = () => {
     const [discount, setDiscount] = useState<number>(0);
     const [totalHT, setTotalHt] = useState(0)
     const [notes, setNotes] = useState<string>('')
+    const [visibleImages, setVisibleImages] = useState<boolean[]>([]);
+    const [titleLogoImage, setTitleLogoImage] = useState<string|null>(null)
+
     
     const baseCurrency = useRef<string>('');
+    const fileInputRef = useRef<(HTMLInputElement | null)[]>([])
+    const imageRef = useRef<(HTMLImageElement | null)[]>([]);
+    const logoRef = useRef<HTMLInputElement>(null)
 
     const addProduct = () => {
         const ids = products.map(product => product.id);
@@ -76,6 +85,11 @@ const Invoice = () => {
         const totalTemp = calculateTotal2(productsTemp) 
         setProducts(productsTemp);
         setTotalHt(totalTemp)
+        setVisibleImages((prev) => {
+            const newState = [...prev];
+            newState[id] = false;
+            return newState;
+        });
     };
 
     const updateProduct = (id: number, field: keyof Product, value: string | number) => {
@@ -142,6 +156,51 @@ const Invoice = () => {
             saveAs(blob, "facture.pdf")
         }
     }
+    const handleImageClick = (index:number) => fileInputRef.current[index]?.click();
+    
+    const handleFileChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                if (imageRef.current[index]) {
+                    imageRef.current[index]!.src = reader.result as string;
+                    imageRef.current[index]!.style.display = 'block'; 
+                    setVisibleImages((prev) => {
+                        const newState = [...prev];
+                        newState[index] = true;
+                        return newState;
+                    });
+                    const productsTemp = [...products].map(product => {
+                        if(product.id === index){
+                            product.image = reader.result as string
+                        }
+                        return product
+                    })
+                    setProducts(productsTemp)
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    const uploadLogo = () => logoRef.current?.click();
+
+    const handleChangeLogo = (e:React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setTitleLogoImage(file.name)
+            const reader = new FileReader();
+            reader.onload = () => {
+                const clientTemp = {...client}
+                clientTemp.logo = reader.result as string
+                setClient(clientTemp)
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+
+    
     useEffect(() => {
         if(exchangeRate.data && exchangeRate.data.length > 0){
             setRateCurrency(exchangeRate.data)
@@ -233,7 +292,7 @@ const Invoice = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <div>
                         <InputWithLabel
-                            label="Société"
+                            label="Société1"
                             placeholder="Nom de la société"
                             type="text"
                             id="client-company"
@@ -245,7 +304,7 @@ const Invoice = () => {
                     </div>
                     <div>
                         <InputWithLabel
-                            label="Téléphone"
+                            label="Téléphone1"
                             placeholder="030 00 000 00"
                             type="text"
                             id="client-phone"
@@ -254,6 +313,17 @@ const Invoice = () => {
                                 setClient({ ...client, phone: e.target.value })
                             }
                         />
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <Label>Logo</Label>
+                        <Button  variant={"outline"} className="w-1/1  mt-4" onClick={() => uploadLogo()} >
+                            {
+                                titleLogoImage || "Importer le logo du client"
+                            }
+                        </Button>
+                        <input type="file" ref={logoRef} className="hidden" onChange={handleChangeLogo} />
                     </div>
                 </div>
                 <div className="grid grid-cols-1 gap-6 mb-8">
@@ -325,65 +395,85 @@ const Invoice = () => {
                 <Table className="table-fixed" >
                     <TableHeader>
                         <TableRow>
-                            <TableHead  >Description</TableHead>
+                            <TableHead className="w-[500px]" >Description</TableHead>
                             <TableHead className="w-[200px]">Quantité</TableHead>
                             <TableHead className="w-[200px]">
                                 Prix unitaire&nbsp;
                                 <small className="text-xs text-muted-foreground leading-none font-medium">({currencyActive})</small>
                             </TableHead>
                             <TableHead className="w-[200px] max-w-[200px] truncate" >Total</TableHead>
-                            <TableHead ></TableHead>
+                            {/* <TableHead ></TableHead> */}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {
                             products.map((product) => (
-                                <TableRow key={product.id} >
-                                    <TableCell className="font-medium">
-                                        <Input 
-                                            type="text" 
-                                            value={product.description} 
-                                            onChange={(e) => updateProduct(product.id,"description",e.target.value)}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Input 
-                                            type="number" 
-                                            value={product.quantity} 
-                                            onChange={(e) =>
-                                                updateProduct(
-                                                    product.id,
-                                                    "quantity",
-                                                    parseFloat(e.target.value),
+                                <Fragment key={product.id} >
+                                    <TableRow className="border-0 " >
+                                        <TableCell colSpan={5} className="text-center"  >
+                                            
+                                            <input 
+                                                type="file" 
+                                                className="hidden " 
+                                                ref={(elt) => { fileInputRef.current[product.id] = elt } }
+                                                onChange={(event) => handleFileChange(product.id, event)}
+                                            />
+                                            <img className={ `w-1/1 ${visibleImages[product.id] ? "border-2" : ""}` } ref={(elt) => { imageRef.current[product.id] = elt } } onClick={() => handleImageClick(product.id) } />
+                                            {
+                                                !visibleImages[product.id] && (
+                                                    <Button  variant={"outline"} className="w-1/1  " onClick={() => handleImageClick(product.id)} >
+                                                        Importer une image du produit
+                                                    </Button>
                                                 )
                                             }
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Input 
-                                            type="number" 
-                                            value={product.unitPrice} 
-                                            onChange={(e) =>
-                                                updateProduct(
-                                                    product.id,
-                                                    "unitPrice",
-                                                    parseFloat(e.target.value),
-                                                )
-                                            }
-                                        />
-                                    </TableCell>
-                                    <TableCell  >
-                                        {
-                                            (product.quantity && product.unitPrice) ?
-                                            formatAmountWithDecimal((product.quantity * product.unitPrice).toFixed(2)) :
-                                            "0.00"
-                                        } { currencyActive}&nbsp;
-                                        
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <Button onClick={() => removeProduct(product.id)} variant={"destructive"} ><Trash2 /></Button>
-                                    </TableCell>
-                                </TableRow>
+
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow >
+                                        <TableCell className="font-medium">
+                                            <Input 
+                                                type="text" 
+                                                value={product.description} 
+                                                onChange={(e) => updateProduct(product.id,"description",e.target.value)}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Input 
+                                                type="number" 
+                                                value={product.quantity} 
+                                                onChange={(e) =>
+                                                    updateProduct(
+                                                        product.id,
+                                                        "quantity",
+                                                        parseFloat(e.target.value),
+                                                    )
+                                                }
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Input 
+                                                type="number" 
+                                                value={product.unitPrice} 
+                                                onChange={(e) =>
+                                                    updateProduct(
+                                                        product.id,
+                                                        "unitPrice",
+                                                        parseFloat(e.target.value),
+                                                    )
+                                                }
+                                            />
+                                        </TableCell>
+                                        <TableCell className="flex items-center justify-between " >
+                                            {
+                                                (product.quantity && product.unitPrice) ?
+                                                formatAmountWithDecimal((product.quantity * product.unitPrice).toFixed(2)) :
+                                                "0.00"
+                                            } { currencyActive}&nbsp;
+                                            
+                                            <Button onClick={() => removeProduct(product.id)} variant={"destructive"} ><Trash2 /></Button>
+                                        </TableCell>
+                                    </TableRow>
+                                </Fragment>
                             ))
                         }
                     </TableBody>
@@ -425,11 +515,14 @@ const Invoice = () => {
                     </div>
                 </div>
                 <div className="flex justify-end gap-2">
-                    <Button onClick={downloadInvoice} >
+                    <Button onClick={addProduct}>
+                        <CirclePlus /> Ajouter un produit ou un service
+                    </Button>
+                    <Button onClick={downloadInvoice} variant="outline"  >
                         <Download />
                         Exporter en PDF
                     </Button>
-                    <Button variant="outline" >
+                    <Button variant="secondary" >
                         <Send />
                         Envoyer par email
                     </Button>

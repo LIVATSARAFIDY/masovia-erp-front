@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FaUserCircle, FaEnvelope, FaLock, FaEyeSlash, FaEye, FaSpinner } from "react-icons/fa";
 import { useAuthStore } from "../../sotre/authStore.ts";
 import type { FormErrors } from "../../type";
@@ -8,7 +8,7 @@ import { useGoogleAuth } from "@/hooks/use-google-auth.ts";
 
 const Register = () => {
     const { handleGoogleAuth } = useGoogleAuth();
-
+    const navigate = useNavigate()
     const { 
         firstname, lastname, email, password, errorHttp, isLoading,
         setEmail, setPassword, setFirstname, setLastname, register
@@ -43,7 +43,7 @@ const Register = () => {
         e.preventDefault();
         if(validateForm()){
             await register();
-
+            navigate('/dashboard')
         }
     };
     return (

@@ -23,7 +23,6 @@ export const registerRequest = async (firstname: string, lastname: string, email
                 roleId:1
             }
         }).json();
-        console.log('registerRequest data', data);
         return data;
         
     } catch (error) {

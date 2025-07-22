@@ -1,23 +1,28 @@
 import { formatAmountWithDecimal } from "@/lib/utils"
 import type { InvoiceDocumentType } from "@/type"
 import {
+    Image,
     Document,
     Page,
     View,
     Text
 } from "@react-pdf/renderer"
-import { type FunctionComponent } from "react"
+import {  useEffect, type FunctionComponent } from "react"
 type DocumentProps = {
     data: InvoiceDocumentType
 }
 const InvoiceDocument: FunctionComponent<DocumentProps> = ({data}) => {
-    
+    useEffect(() => {
+        console.log('data',data)
+    },[])
     return (
         <Document>
             <Page size="A4" style={{padding: 40,fontSize: 12,fontFamily: 'Helvetica',}} >
                 <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}} >
                     <View style={{marginBottom: 20}}>
-                        <Text style={{fontSize: 20,fontWeight: 'bold'}}>Masovia</Text>
+                        {
+                            data.client.logo.trim() !== '' ? <Image src={data.client.logo} style={{ width: '100px', height: "100px" }} />: <Text style={{fontSize: 20,fontWeight: 'bold'}}>Masovia</Text>
+                        }
                     </View>
                     <View><Text style={{fontSize: 50,fontWeight: 'bold'}}>Facture</Text></View>
                 </View>
@@ -56,21 +61,26 @@ const InvoiceDocument: FunctionComponent<DocumentProps> = ({data}) => {
                         paddingVertical: 4,
                         backgroundColor: '#eee',
                         fontWeight: 'bold',
+                        marginBottom: 5
                     }}>
-                        {/* <Text style={{ width: '40%'}}>Image</Text> */}
-                        <Text style={{ width: '40%' }}>Produit</Text>
-                        <Text style={{ width: '20%' }}>Prix unitaire</Text>
-                        <Text style={{ width: '10%' }}>Qt</Text>
-                        <Text style={{ width: '20%' }}>Total</Text> 
                     </View>
 
                     {data.products.map((item, i) => (
-                        <View style={{flexDirection: 'row' ,borderBottom: '1 solid #ccc',paddingVertical: 4,}} key={i}>
-                            {/* <Image src={item.image} style={{ width: '40%', height: 60 }} /> */}
-                            <Text style={{ width: '40%', paddingLeft:5, paddingRight:5 }}>{item.description}</Text>
-                            <Text style={{ width: '20%', paddingLeft:5, paddingRight:5 }}>{item.unitPrice.toFixed(2)} €</Text>
-                            <Text style={{ width: '10%', paddingLeft:5, paddingRight:5 }}>{item.quantity}</Text>
-                            <Text style={{ width: '20%', paddingLeft:5, paddingRight:5 }}>{(item.unitPrice * item.quantity).toFixed(2)} €</Text>
+                        <View key={i} style={{ border:"2px solid black", borderRadius:"10px", marginBottom:"5px", padding:"5px" }} >
+                            
+                            <View style={{flexDirection: 'row' ,borderBottom: '1 solid #ccc',paddingVertical: 4,}} key={i}>
+                                <Text style={{ width: '40%', paddingLeft:5, paddingRight:5 }}>{item.description}</Text>
+                                <Text style={{ width: '20%', paddingLeft:5, paddingRight:5 }}>P.U: {item.unitPrice.toFixed(2)} {data.currency}</Text>
+                                <Text style={{ width: '10%', paddingLeft:5, paddingRight:5 }}>Qt: {item.quantity}</Text>
+                                <Text style={{ width: '20%', paddingLeft:5, paddingRight:5 }}>Total: {(item.unitPrice * item.quantity).toFixed(2)} {data.currency}</Text>
+                            </View>
+                            {
+                                item.image && (
+                                    <View>
+                                        <Image src={item.image} style={{ width: '100%', height: "auto" }} />
+                                    </View>
+                                )
+                            }
                         </View>
                     ))}
                 </View>
