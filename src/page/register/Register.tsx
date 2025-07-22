@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { FaUserCircle, FaEnvelope, FaLock, FaEyeSlash, FaEye, FaSpinner } from "react-icons/fa";
 import { useAuthStore } from "../../sotre/authStore.ts";
 import type { FormErrors } from "../../type";
@@ -7,7 +7,6 @@ import { useGoogleAuth } from "@/hooks/use-google-auth.ts";
 
 
 const Register = () => {
-    const navigate = useNavigate()
     const { handleGoogleAuth } = useGoogleAuth();
 
     const { 
